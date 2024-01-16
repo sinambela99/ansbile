@@ -1,0 +1,21 @@
+- name: reverse proxy
+  hosts: 103.127.132.172
+
+  tasks:
+
+    - name: Create directory for nginx
+      file:
+        path: "/home/paul/nginx"
+        state: directory
+        mode: '775'
+        
+    - name: Create file reverse_proxy.conf
+      template:
+        src: ./credentials/frontend/reverse_proxy_app.j2
+        dest: "/home/paul/nginx/reverse_proxy.conf"
+
+    - name: Create directory for certs
+      file:
+        path: "/home/paul/nginx/certs"
+        state: directory
+        mode: '775'

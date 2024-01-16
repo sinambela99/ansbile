@@ -1,0 +1,39 @@
+- name: Letsencrypt Certbot
+  hosts: 103.127.96.18
+  become: true
+
+  tasks:
+    - name: Install Certbot using snap 
+      become: true
+      become_user: root 
+      shell: |
+       sudo snap install --classic certbot &&
+       sudo ln -s /snap/bin/certbot /usr/bin/certbot &&
+       sudo snap set certbot trust-plugin-with-root=ok &&
+       sudo snap install certbot-dns-cloudflare
+      register: certbot_install_result
+      changed_when: "certbot_install_result.rc == 0"
+
+    - name: Create directory for certs
+      file:
+        path: "/home/paul/.secrets"
+        state: directory
+
+    - name: Create file cloud init in directory secrets 
+      template:
+        src: ./credentials/cloudflare/cloudflare_ini.j2
+        dest: "/home/paul/.secrets/cloudflare.ini"
+        mode: 0400
+
+    - name: Run certbot to generate certificates 
+      command: >
+        certbot certonly 
+        --dns-cloudflare 
+        --dns-cloudflare-credentials /home/paul/.secrets/cloudflare.ini 
+        --agree-tos
+        --non-interactive
+        --email sinambelaian@gmail.com
+        --domains *.sinambela.studentdumbways.my.id -v
+      become: true
+      become_user: root
+      timeout: 60

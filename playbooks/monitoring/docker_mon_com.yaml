@@ -1,0 +1,15 @@
+- name: docker compose app
+  hosts: 103.127.96.18
+  become: true
+  tasks:
+
+    - name: Create file docker-compose.yaml
+      template:
+        src: ./credentials/monitoring/monitoring.conf.j2
+        dest: "/home/paul/docker-compose.yaml"
+
+    - name: Create file prometheus.yaml
+      template:
+        src: ./credentials/monitoring/prometheus.j2
+        dest: "/home/paul/prometheus.yml"
+    

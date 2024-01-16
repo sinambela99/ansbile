@@ -1,0 +1,30 @@
+- hosts: 103.127.96.18
+  become: true
+  tasks:
+
+  - name: "Buat akun baru"
+    user: 
+      name: paul
+      password: '$6$jOB5Z43ql95TDqI.$YTvsSgOba9sjle.sZG6/LZ7J49Zhv5eSaCUObljj1tcHe78vQQ5CEOVggMQcrV9zk3wPCySsK5HFKiZLSaUCj.' #mkpswd=paul
+      shell: /bin/bash
+      groups: sudo
+      state: present
+      system: true
+      home: /home/paul
+
+  - name: "Setup Configuration SSHD"
+    lineinfile: 
+      path: /etc/ssh/sshd_config
+      regexp: 'PasswordAuthentication no'
+      line: PasswordAuthentication yes
+
+  - name: "Setup Configuration cloud init"
+    lineinfile: 
+      path: /etc/ssh/sshd_config.d/50-cloud-init.conf
+      regexp: 'PasswordAuthentication no'
+      line: PasswordAuthentication yes
+
+  - name: "Reload SSHD"
+    systemd_service: 
+      name: sshd
+      state: reloaded

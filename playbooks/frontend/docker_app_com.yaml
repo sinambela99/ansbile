@@ -1,0 +1,31 @@
+- name: docker compose app
+  hosts: 103.127.132.172
+  become: true
+  tasks:
+
+    - name: Create file docker-compose.yaml
+      template:
+        src: ./credentials/frontend/frontend.conf.j2
+        dest: "/home/paul/docker-compose.yaml"
+
+    - name: Create file Dockerfile
+      template:
+        src: ./credentials/frontend/docker_file_frontend.j2
+        dest: "/home/paul/literature-frontend/Dockerfile"
+
+    - name: Create file ecosystem.config.js
+      template:  
+        src: ./credentials/frontend/ecosystem.j2
+        dest: "/home/paul/literature-frontend/ecosystem.config.js"
+      loop: 
+        - destination_1,  
+        
+    - name: more complex items to add several users
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    uid: "{{ item.uid }}"
+    groups: "{{ item.groups }}"
+    state: present
+  with_items:
+     - { name: testuser1, uid: 1002, groups: "wheel, staff" }
+     - { name: testuser2, uid: 1003, groups: staff }

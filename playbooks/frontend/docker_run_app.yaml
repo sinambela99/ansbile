@@ -1,0 +1,23 @@
+- name: Docker run
+  hosts: 103.127.132.172
+  become: true
+
+  tasks:
+    - name: Install Docker Compose
+      ansible.builtin.package:
+        name: docker-compose
+        state: present
+
+    - name: Build Docker Image
+      command:
+        cmd: "docker build -t ian/frontend:1.0 ."
+        chdir: "/home/paul/literature-frontend"
+      become: true
+      become_user: root
+
+    - name: Run docker-compose up -d
+      ansible.builtin.command:
+        cmd: "docker-compose up -d"
+        chdir: "/home/paul/"
+      become: true
+      become_user: root

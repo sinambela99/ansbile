@@ -1,0 +1,9 @@
+- hosts: all
+  become: true 
+  tasks:
+  
+  - name: "Installation nginx"
+    apt:
+     name:
+       - nginx
+     state: latest

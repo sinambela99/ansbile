@@ -1,0 +1,3 @@
+[biznet]
+103.127.96.18 ansible_user=paul
+103.127.132.172 ansible_user=paul

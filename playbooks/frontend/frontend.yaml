@@ -1,0 +1,47 @@
+- name: Deploy frontend
+  hosts: 103.127.132.172
+  become: true
+
+
+  tasks:
+    - name: Clone frontend from github
+      git: 
+        repo: https://github.com/dumbwaysdev/literature-frontend
+        dest: /home/paul/literature-frontend
+
+    - name: Change config src frontend
+      lineinfile: 
+         path: /home/paul/literature-frontend/src/config/config.js
+         regexp: "baseURL: 'http://localhost:5000/api/v1'"
+         line:   "baseURL: 'https://api.sinambela.studentdumbways.my.id/api/v1'"
+      
+    # - name: Add Node.js 14 repository key
+    #   apt_key:
+    #     url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    #     state: present
+
+    # - name: Add Node.js 14 repository
+    #   apt_repository:
+    #     repo: deb https://deb.nodesource.com/node_14.x {{ ansible_distribution_release }} main
+    #     state: present
+    #     update_cache: yes
+
+    # - name: Install Node.js 14
+    #   apt:
+    #     name: "nodejs=14.*"
+    #     state: present
+
+    # - name: Install npm
+    #   apt:
+    #     name: npm install
+    #     state: present
+
+    # - name: Run npm install
+    #   command: npm install
+    #   args:
+    #     chdir: /home/paul/literature-frontend    
+        
+    # - name: Run npm start
+    #   command: npm start
+    #   args:
+    #      chdir: /home/paul/literature-frontend
